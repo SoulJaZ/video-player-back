@@ -27,6 +27,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/contenidos', contenidoRoutes);
 app.use('/api/programacion', programacionRoutes);
 
+app.use((req, res, next) => {
+    console.log(`[${req.method}] ${req.originalUrl}`);
+    next();
+});
 
 app.get('/', (req, res) => {
     res.send('Servidor backend funcionando correctamente');

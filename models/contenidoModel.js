@@ -41,12 +41,17 @@ const actualizarContenido = async (id, contenido) => {
 // Eliminar contenido por ID
 const eliminarContenido = async (id) => {
     const query = 'DELETE FROM Contenidos WHERE id_contenido = ?';
-    try {
-        const [result] = await db.query(query, [id]);
-        return result; // Devuelve el resultado de la eliminación
-    } catch (error) {
-        throw error; // Si hay error, lo lanzamos
-    }
+    db.execute(query, [id], (err, result) => {
+        if (err) {
+          console.error('Error al eliminar el contenido:', err);
+          return res.status(500).send({ message: 'Error al eliminar el contenido' });
+        }
+        if (result.affectedRows > 0) {
+          return res.status(200).send({ message: 'Contenido eliminado con éxito' });
+        } else {
+          return res.status(404).send({ message: 'Contenido no encontrado' });
+        }
+      });
 };
 
 module.exports = {
